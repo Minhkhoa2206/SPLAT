@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MKHOME Shopee Extractor</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#020617;
+    color:white;
+    overflow-x:hidden;
+}
+
+/* glow */
+
+.glow1{
+    position:fixed;
+    width:700px;
+    height:700px;
+    background:radial-gradient(circle,#2563eb55 0%,transparent 70%);
+    top:-250px;
+    right:-250px;
+    filter:blur(90px);
+    z-index:-1;
+}
+
+.glow2{
+    position:fixed;
+    width:700px;
+    height:700px;
+    background:radial-gradient(circle,#9333ea55 0%,transparent 70%);
+    bottom:-250px;
+    left:-250px;
+    filter:blur(90px);
+    z-index:-1;
+}
+
+/* header */
+
+header{
+    padding:25px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+    position:sticky;
+    top:0;
+    z-index:999;
+    background:rgba(2,6,23,0.7);
+}
+
+.logo{
+    font-size:32px;
+    font-weight:700;
+
+    background:linear-gradient(90deg,#60a5fa,#c084fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.menu{
+    display:flex;
+    gap:20px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:#cbd5e1;
+}
+
+/* hero */
+
+.hero{
+    padding:80px 25px 50px;
+    text-align:center;
+}
+
+.hero h1{
+    font-size:58px;
+    line-height:1.2;
+    margin-bottom:20px;
+}
+
+.hero span{
+    background:linear-gradient(90deg,#60a5fa,#c084fc);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.hero p{
+    max-width:760px;
+    margin:auto;
+    line-height:1.8;
+    color:#cbd5e1;
+}
+
+/* tool */
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.tool{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:25px;
+    padding:25px;
+    backdrop-filter:blur(15px);
+}
+
+.tool h2{
+    margin-bottom:20px;
+}
+
+input{
+    width:100%;
+    padding:18px;
+    border:none;
+    outline:none;
+    border-radius:16px;
+    background:#111827;
+    color:white;
+    font-size:15px;
+}
+
+.buttons{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+    flex-wrap:wrap;
+}
+
+button{
+    border:none;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.primary{
+    padding:15px 24px;
+    border-radius:14px;
+    color:white;
+    font-weight:600;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+}
+
+.secondary{
+    padding:15px 24px;
+    border-radius:14px;
+    color:white;
+    background:#1e293b;
+}
+
+button:hover{
+    transform:translateY(-4px);
+}
+
+/* loading */
+
+.loading{
+    display:none;
+    text-align:center;
+    margin-top:30px;
+}
+
+.loader{
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    border:5px solid rgba(255,255,255,0.1);
+    border-top:5px solid #60a5fa;
+    animation:spin 1s linear infinite;
+    margin:auto;
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+
+.loading p{
+    margin-top:15px;
+    color:#cbd5e1;
+}
+
+/* result */
+
+.result{
+    margin-top:35px;
+}
+
+.card{
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:26px;
+    overflow:hidden;
+    display:grid;
+    grid-template-columns:380px 1fr;
+    backdrop-filter:blur(15px);
+}
+
+.card img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.info{
+    padding:25px;
+}
+
+.tag{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:999px;
+    background:#2563eb33;
+    color:#93c5fd;
+    font-size:12px;
+    margin-bottom:15px;
+}
+
+.info h2{
+    font-size:32px;
+    margin-bottom:15px;
+}
+
+.price{
+    font-size:38px;
+    font-weight:700;
+    color:#60a5fa;
+    margin-bottom:20px;
+}
+
+.meta{
+    color:#cbd5e1;
+    line-height:2;
+}
+
+.action{
+    display:flex;
+    gap:15px;
+    flex-wrap:wrap;
+    margin-top:25px;
+}
+
+.buy{
+    padding:14px 22px;
+    border-radius:14px;
+    color:white;
+    background:linear-gradient(90deg,#2563eb,#7c3aed);
+}
+
+.copy{
+    padding:14px 22px;
+    border-radius:14px;
+    color:white;
+    background:#1e293b;
+}
+
+.json{
+    margin-top:30px;
+    background:black;
+    padding:20px;
+    border-radius:18px;
+    overflow:auto;
+    max-height:500px;
+}
+
+pre{
+    color:#4ade80;
+    white-space:pre-wrap;
+}
+
+footer{
+    padding:50px;
+    text-align:center;
+    color:#94a3b8;
+}
+
+@media(max-width:850px){
+
+    .hero h1{
+        font-size:40px;
+    }
+
+    .card{
+        grid-template-columns:1fr;
+    }
+
+    .card img{
+        height:320px;
+    }
+
+    .menu{
+        display:none;
+    }
+
+    header{
+        padding:20px;
+    }
+}
+
+</style>
+</head>
+<body>
+
+<div class="glow1"></div>
+<div class="glow2"></div>
+
+<header>
+
+    <div class="logo">
+        MKHOME TOOL
+    </div>
+
+    <div class="menu">
+        <a href="#">Shopee</a>
+        <a href="#">Affiliate</a>
+        <a href="#">Extractor</a>
+    </div>
+
+</header>
+
+<section class="hero">
+
+    <h1>
+        Shopee Product <br>
+        <span>Extractor</span>
+    </h1>
+
+    <p>
+        Dán link Shopee vào ✨  
+        Tự động lấy tên sản phẩm, giá, ảnh,
+        số lượng bán và JSON dữ liệu.
+    </p>
+
+</section>
+
+<section class="container">
+
+    <div class="tool">
+
+        <h2>
+            🔗 Nhập Link Shopee
+        </h2>
+
+        <input
+        type="text"
+        id="link"
+        placeholder="https://shopee.vn/product/...">
+
+        <div class="buttons">
+
+            <button
+            class="primary"
+            onclick="getProduct()">
+
+                🚀 Lấy Sản Phẩm
+
+            </button>
+
+            <button
+            class="secondary"
+            onclick="demo()">
+
+                ⚡ Demo
+
+            </button>
+
+        </div>
+
+        <div class="loading" id="loading">
+
+            <div class="loader"></div>
+
+            <p>
+                Đang lấy dữ liệu...
+            </p>
+
+        </div>
+
+        <div class="result" id="result"></div>
+
+    </div>
+
+</section>
+
+<footer>
+
+    © 2026 MKHOME Extractor 🌌
+
+</footer>
+
+<script>
+
+function demo(){
+
+    document.getElementById("link").value =
+    "https://shopee.vn/product/265418187/15899482964";
+}
+
+async function getProduct(){
+
+    const link =
+    document.getElementById("link").value;
+
+    const result =
+    document.getElementById("result");
+
+    const loading =
+    document.getElementById("loading");
+
+    if(!link){
+
+        alert("Nhập link trước 😑");
+        return;
+    }
+
+    const regex =
+    /product\/(\d+)\/(\d+)/;
+
+    const match =
+    link.match(regex);
+
+    if(!match){
+
+        alert("Link Shopee không hợp lệ 😢");
+        return;
+    }
+
+    const shopid = match[1];
+    const itemid = match[2];
+
+    loading.style.display = "block";
+
+    result.innerHTML = "";
+
+    try{
+
+        const response =
+        await fetch(
+
+            `/api/shopee?shopid=${shopid}&itemid=${itemid}`
+
+        );
+
+        const data =
+        await response.json();
+
+        console.log(data);
+
+        const item =
+        data.data.item;
+
+        const image =
+        `https://cf.shopee.vn/file/${item.image}`;
+
+        const price =
+        (item.price / 100000)
+        .toLocaleString("vi-VN") + "đ";
+
+        result.innerHTML = `
+
+        <div class="card">
+
+            <img src="${image}">
+
+            <div class="info">
+
+                <div class="tag">
+                    Shopee Product
+                </div>
+
+                <h2>
+                    ${item.name}
+                </h2>
+
+                <div class="price">
+                    ${price}
+                </div>
+
+                <div class="meta">
+
+                    ⭐ Đánh Giá:
+                    ${item.item_rating.rating_star}
+
+                    <br>
+
+                    🔥 Đã Bán:
+                    ${item.historical_sold}
+
+                    <br>
+
+                    📦 Kho:
+                    ${item.stock}
+
+                    <br>
+
+                    🏪 Shop ID:
+                    ${item.shopid}
+
+                </div>
+
+                <div class="action">
+
+                    <button
+                    class="buy"
+                    onclick="window.open('${link}')">
+
+                        🛒 Mở Shopee
+
+                    </button>
+
+                    <button
+                    class="copy"
+                    onclick='copyJSON(${JSON.stringify(item)})'>
+
+                        📋 Copy JSON
+
+                    </button>
+
+                </div>
+
+                <div class="json">
+
+<pre>
+${JSON.stringify(item,null,2)}
+</pre>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+
+    }catch(err){
+
+        console.log(err);
+
+        result.innerHTML = `
+
+        <div class="card">
+
+            <div class="info">
+
+                <h2>
+                    😢 Không lấy được dữ liệu
+                </h2>
+
+                <div class="meta">
+
+                    Shopee có thể đang:
+                    <br><br>
+
+                    - chặn IP datacenter
+                    <br>
+                    - chặn API public
+                    <br>
+                    - yêu cầu cookie/token
+                    <br>
+                    - rate limit request
+
+                </div>
+
+            </div>
+
+        </div>
+
+        `;
+    }
+
+    loading.style.display = "none";
+}
+
+function copyJSON(data){
+
+    navigator.clipboard.writeText(
+        JSON.stringify(data,null,2)
+    );
+
+    alert("Đã copy JSON ✨");
+}
+
+</script>
+
+</body>
+</html>
